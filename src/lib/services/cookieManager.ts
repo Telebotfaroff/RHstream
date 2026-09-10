@@ -100,13 +100,23 @@ export const deleteCookie = async (
         throw new Error('Not implemented');
       }
     } catch {
-      // Android workaround: set it to empty and expired
-      await CookieManager.set(url, {
-        name,
-        value: '',
-        expires: '1970-01-01T00:00:00.00Z',
-        path: '/',
-      });
+      // Android workaround: set it to empty and expired across possible domain scopes
+      const domains: Array<string | undefined> = [undefined];
+      try {
+        const parsed = new URL(url);
+        const host = parsed.hostname;
+        domains.push(host, `.${host}`);
+      } catch {}
+
+      for (const d of domains) {
+        await CookieManager.set(url, {
+          name,
+          value: '',
+          domain: d,
+          expires: '1970-01-01T00:00:00.00Z',
+          path: '/',
+        }).catch(() => {});
+      }
     }
     await CookieManager.flush();
   } catch (e) {

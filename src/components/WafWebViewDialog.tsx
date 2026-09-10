@@ -37,7 +37,7 @@ const WafWebViewDialog = () => {
   // Set while waiting for a fresh HTML capture before resolving.
   const pendingResolveRef = useRef(false);
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const initialCookiesRef = useRef<Set<string>>(new Set());
+  const initialCookieValuesRef = useRef<Record<string, string>>({});
   const webViewReadyRef = useRef(false);
 
   const userAgent =
@@ -50,15 +50,15 @@ const WafWebViewDialog = () => {
     htmlRef.current = '';
     setLoading(true);
     webViewReadyRef.current = false;
-    initialCookiesRef.current = new Set();
+    initialCookieValuesRef.current = {};
     let cancelled = false;
 
-    // Snapshot existing cookies so we only auto-resolve on NEW/UPDATED ones
+    // Snapshot existing cookies so we can detect new or updated cookies
     if (request) {
       (async () => {
         const cookieMap = await getCookies(request.url);
         if (!cancelled) {
-          initialCookiesRef.current = new Set(Object.keys(cookieMap).filter(k => cookieMap[k] !== ''));
+          initialCookieValuesRef.current = cookieMap;
           webViewReadyRef.current = true;
         }
       })();
@@ -152,16 +152,17 @@ const WafWebViewDialog = () => {
         return;
       }
       const cookieMap = await getCookies(url);
-      if (
-        cookieMap[cookieName] &&
-        !initialCookiesRef.current.has(cookieName)
-      ) {
+      const currentVal = cookieMap[cookieName];
+      const initialVal = initialCookieValuesRef.current[cookieName];
+
+      // Auto-resolve when the awaited cookie is newly set or updated
+      if (currentVal && (!initialVal || currentVal !== initialVal)) {
         resolveWithPage();
       }
     };
 
     poll();
-    const interval = setInterval(poll, 1000);
+    const interval = setInterval(poll, 800);
     return () => {
       cancelled = true;
       clearInterval(interval);

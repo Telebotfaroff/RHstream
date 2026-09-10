@@ -7,6 +7,7 @@ jest.mock('axios', () => ({
 
 jest.mock('../src/lib/services/cookieManager', () => ({
   getCookieHeader: jest.fn(),
+  setCookieString: jest.fn(),
 }));
 
 jest.mock('../src/lib/sandbox/rateLimiter', () => ({

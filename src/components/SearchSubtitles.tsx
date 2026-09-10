@@ -131,9 +131,7 @@ const SearchSubtitles = ({
         <SafeAreaView
           className="h-full w-full"
           style={{backgroundColor: 'rgba(0,0,0,0.96)'}}>
-          <View
-            className="flex-1 self-center"
-            style={{width: contentWidth}}>
+          <View className="flex-1 self-center" style={{width: contentWidth}}>
             <View className="flex-row items-center py-3">
               <TouchableOpacity
                 accessibilityLabel="Close subtitle search"
@@ -246,96 +244,94 @@ const SearchSubtitles = ({
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag"
               contentContainerStyle={{flexGrow: 1, paddingBottom: 24}}>
-            {loading ? (
-              <View className="w-full h-full justify-center items-center">
-                <ActivityIndicator size="large" color={primary} />
-              </View>
-            ) : (
-              searchResults.map((result: any) => (
-                <TouchableOpacity
-                  key={result?.IDSubtitleFile}
-                  activeOpacity={0.74}
-                  className="my-1.5 flex-row items-center rounded-2xl p-3"
-                  style={{
-                    backgroundColor: 'rgba(255,255,255,0.055)',
-                    borderColor: 'rgba(255,255,255,0.09)',
-                    borderWidth: 1,
-                  }}
-                  onPress={() => {
-                    setSearchModalVisible(false);
-                    setExternalSubs(prev => [
-                      {
-                        type: TextTrackType.SUBRIP,
-                        language: result?.ISO639,
-                        title:
-                          result?.InfoReleaseGroup + ' ' + result?.UserNickName,
-                        uri: result?.SubDownloadLink?.replace('.gz', ''),
-                      },
-                      ...prev,
-                    ]);
-                  }}>
-                  <View
-                    className="mr-3 min-w-14 items-center rounded-xl px-2 py-2"
-                    style={{backgroundColor: colors.primaryContainer}}>
-                    <AppText
-                      className="text-xs font-bold uppercase"
-                      style={{color: colors.onPrimaryContainer}}>
-                      {result?.ISO639 || result?.SubLanguageID || 'SUB'}
-                    </AppText>
-                  </View>
-                  <View className="min-w-0 flex-1">
-                    <AppText
-                      className="text-white text-base font-semibold"
-                      numberOfLines={1}>
-                      {result?.MovieName?.trim() || 'Untitled subtitle'}
-                    </AppText>
-                    <AppText
-                      className="mt-1 text-white/50 text-xs"
-                      numberOfLines={1}>
-                      {[result?.InfoReleaseGroup, result?.UserNickName]
-                        .filter(Boolean)
-                        .join(' · ') || 'OpenSubtitles'}
-                    </AppText>
-                  </View>
-                  {(Number(result?.SeriesSeason) > 0 ||
-                    Number(result?.SeriesEpisode) > 0) && (
-                    <View className="mx-3 flex-row" style={{gap: 6}}>
-                      {Number(result?.SeriesSeason) > 0 && (
-                        <AppText className="rounded-lg bg-white/10 px-2 py-1 text-xs text-white/75">
-                          S{result?.SeriesSeason}
-                        </AppText>
-                      )}
-                      {Number(result?.SeriesEpisode) > 0 && (
-                        <AppText className="rounded-lg bg-white/10 px-2 py-1 text-xs text-white/75">
-                          E{result?.SeriesEpisode}
-                        </AppText>
-                      )}
+              {loading ? (
+                <View className="w-full h-full justify-center items-center">
+                  <ActivityIndicator size="large" color={primary} />
+                </View>
+              ) : (
+                searchResults.map((result: any) => (
+                  <TouchableOpacity
+                    key={result?.IDSubtitleFile}
+                    activeOpacity={0.74}
+                    className="my-1.5 flex-row items-center rounded-2xl p-3"
+                    style={{
+                      backgroundColor: 'rgba(255,255,255,0.055)',
+                      borderColor: 'rgba(255,255,255,0.09)',
+                      borderWidth: 1,
+                    }}
+                    onPress={() => {
+                      setSearchModalVisible(false);
+                      setExternalSubs(prev => [
+                        {
+                          type: TextTrackType.SUBRIP,
+                          language: result?.ISO639,
+                          title:
+                            result?.InfoReleaseGroup +
+                            ' ' +
+                            result?.UserNickName,
+                          uri: result?.SubDownloadLink?.replace('.gz', ''),
+                        },
+                        ...prev,
+                      ]);
+                    }}>
+                    <View
+                      className="mr-3 min-w-14 items-center rounded-xl px-2 py-2"
+                      style={{backgroundColor: colors.primaryContainer}}>
+                      <AppText
+                        className="text-xs font-bold uppercase"
+                        style={{color: colors.onPrimaryContainer}}>
+                        {result?.ISO639 || result?.SubLanguageID || 'SUB'}
+                      </AppText>
                     </View>
-                  )}
+                    <View className="min-w-0 flex-1">
+                      <AppText
+                        className="text-white text-base font-semibold"
+                        numberOfLines={1}>
+                        {result?.MovieName?.trim() || 'Untitled subtitle'}
+                      </AppText>
+                      <AppText
+                        className="mt-1 text-white/50 text-xs"
+                        numberOfLines={1}>
+                        {[result?.InfoReleaseGroup, result?.UserNickName]
+                          .filter(Boolean)
+                          .join(' · ') || 'OpenSubtitles'}
+                      </AppText>
+                    </View>
+                    {(Number(result?.SeriesSeason) > 0 ||
+                      Number(result?.SeriesEpisode) > 0) && (
+                      <View className="mx-3 flex-row" style={{gap: 6}}>
+                        {Number(result?.SeriesSeason) > 0 && (
+                          <AppText className="rounded-lg bg-white/10 px-2 py-1 text-xs text-white/75">
+                            S{result?.SeriesSeason}
+                          </AppText>
+                        )}
+                        {Number(result?.SeriesEpisode) > 0 && (
+                          <AppText className="rounded-lg bg-white/10 px-2 py-1 text-xs text-white/75">
+                            E{result?.SeriesEpisode}
+                          </AppText>
+                        )}
+                      </View>
+                    )}
+                    <MaterialIcons name="add" size={22} color={primary} />
+                  </TouchableOpacity>
+                ))
+              )}
+              {searchResults.length === 0 && !loading && (
+                <View className="w-full h-full justify-center items-center">
                   <MaterialIcons
-                    name="download"
-                    size={22}
-                    color={primary}
+                    name={error ? 'error-outline' : 'subtitles'}
+                    size={38}
+                    color={error ? colors.error : colors.onSurfaceVariant}
                   />
-                </TouchableOpacity>
-              ))
-            )}
-            {searchResults.length === 0 && !loading && (
-              <View className="w-full h-full justify-center items-center">
-                <MaterialIcons
-                  name={error ? 'error-outline' : 'subtitles'}
-                  size={38}
-                  color={error ? colors.error : colors.onSurfaceVariant}
-                />
-                <AppText
-                  className="mt-3 text-base font-semibold"
-                  style={{
-                    color: error ? colors.error : colors.onSurfaceVariant,
-                  }}>
-                  {error || 'Search to find available subtitles'}
-                </AppText>
-              </View>
-            )}
+                  <AppText
+                    className="mt-3 text-base font-semibold"
+                    style={{
+                      color: error ? colors.error : colors.onSurfaceVariant,
+                    }}>
+                    {error || 'Search to find available subtitles'}
+                  </AppText>
+                </View>
+              )}
             </ScrollView>
           </View>
         </SafeAreaView>
