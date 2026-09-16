@@ -48,6 +48,8 @@ import notificationService from './lib/services/Notification';
 import WafWebViewDialog from './components/WafWebViewDialog';
 import ProviderSandboxHost from './components/ProviderSandboxHost';
 import {syncDohSettings} from './lib/services/dohService';
+import {syncWarpSettings} from './lib/services/warpService';
+import {syncByeDpiSettings} from './lib/services/byeDpiService';
 import {
   reconcileCompletedDownloadOutputs,
   reconcileDownloadState,
@@ -318,10 +320,16 @@ const App = () => {
     };
   }, []);
 
-  // Initialize DNS over HTTPS
+  // Initialize DNS over HTTPS, Cloudflare WARP & ByeDPI
   useEffect(() => {
     syncDohSettings().catch(e =>
       console.warn('[DoH] Failed to sync settings:', e),
+    );
+    syncWarpSettings().catch(e =>
+      console.warn('[WARP] Failed to sync settings:', e),
+    );
+    syncByeDpiSettings().catch(e =>
+      console.warn('[ByeDPI] Failed to sync settings:', e),
     );
   }, []);
 

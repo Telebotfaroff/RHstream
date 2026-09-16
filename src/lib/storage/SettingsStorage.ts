@@ -65,6 +65,13 @@ export enum SettingsKeys {
   DOH_ENABLED = 'dohEnabled',
   DOH_PROVIDER = 'dohProvider',
   DOH_CUSTOM_URL = 'dohCustomUrl',
+
+  // Cloudflare WARP
+  WARP_ENABLED = 'warpEnabled',
+
+  // ByeDPI Anti-DPI
+  BYEDPI_ENABLED = 'byedpiEnabled',
+  BYEDPI_CMD_ARGS = 'byedpiCmdArgs',
 }
 
 /**
@@ -425,6 +432,32 @@ export class SettingsStorage {
 
   setDohCustomUrl(url: string): void {
     mainStorage.setString(SettingsKeys.DOH_CUSTOM_URL, url);
+  }
+
+  // Cloudflare WARP
+  isWarpEnabled(): boolean {
+    return mainStorage.getBool(SettingsKeys.WARP_ENABLED, false);
+  }
+
+  setWarpEnabled(enabled: boolean): void {
+    mainStorage.setBool(SettingsKeys.WARP_ENABLED, enabled);
+  }
+
+  // ByeDPI Anti-DPI
+  isByeDpiEnabled(): boolean {
+    return mainStorage.getBool(SettingsKeys.BYEDPI_ENABLED, true);
+  }
+
+  setByeDpiEnabled(enabled: boolean): void {
+    mainStorage.setBool(SettingsKeys.BYEDPI_ENABLED, enabled);
+  }
+
+  getByeDpiCmdArgs(): string {
+    return mainStorage.getString(SettingsKeys.BYEDPI_CMD_ARGS) || '';
+  }
+
+  setByeDpiCmdArgs(args: string): void {
+    mainStorage.setString(SettingsKeys.BYEDPI_CMD_ARGS, args);
   }
 }
 

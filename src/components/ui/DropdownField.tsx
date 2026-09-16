@@ -24,6 +24,7 @@ interface DropdownFieldProps<T> {
   placeholder?: string;
   showFullOptionLabels?: boolean;
   style?: ViewStyle;
+  disabled?: boolean;
 }
 
 const DropdownField = <T,>({
@@ -35,6 +36,7 @@ const DropdownField = <T,>({
   placeholder = 'Select',
   showFullOptionLabels = false,
   style,
+  disabled = false,
 }: DropdownFieldProps<T>) => {
   const colors = useM3Colors();
   const hostTheme = useM3HostTheme();
@@ -46,11 +48,12 @@ const DropdownField = <T,>({
   return (
     <Host
       matchContents={{vertical: true}}
-      style={[{width: '100%'}, style]}
+      style={[{width: '100%', opacity: disabled ? 0.45 : 1}, style]}
+      pointerEvents={disabled ? 'none' : 'auto'}
       {...hostTheme}>
       <ExposedDropdownMenuBox
-        expanded={expanded}
-        onExpandedChange={setExpanded}>
+        expanded={disabled ? false : expanded}
+        onExpandedChange={next => !disabled && setExpanded(next)}>
         <TextField
           readOnly
           singleLine
