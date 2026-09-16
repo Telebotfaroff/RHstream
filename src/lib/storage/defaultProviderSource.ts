@@ -6,9 +6,8 @@ const DEFAULT_VEGA_PROVIDER_SOURCE = {
 };
 
 /**
- * Ensure the official Vega provider repository is available automatically.
- * Existing custom provider sources are preserved; Zenda-Cross is only made
- * the default when the user has no provider source configured yet.
+ * Ensure the upstream Vega provider repository is registered and selected
+ * automatically. Existing provider sources are preserved.
  */
 export const initializeDefaultProviderSource = (): void => {
   const sources = extensionStorage.getProviderSources();
@@ -24,6 +23,10 @@ export const initializeDefaultProviderSource = (): void => {
       DEFAULT_VEGA_PROVIDER_SOURCE.url,
     );
   }
+
+  extensionStorage.setDefaultProviderSource(
+    DEFAULT_VEGA_PROVIDER_SOURCE.author,
+  );
 };
 
 initializeDefaultProviderSource();
