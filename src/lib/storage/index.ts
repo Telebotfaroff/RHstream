@@ -1,3 +1,5 @@
+import './defaultProviderSource';
+
 // Export StorageService
 export {
   StorageService,
